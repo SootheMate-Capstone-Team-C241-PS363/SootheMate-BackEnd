@@ -3,10 +3,10 @@ name: Deploy to Goggle App Engine Development
 on:
   push:
     branches:
-      - dev
+      - develop
   pull_request:
     branches:
-      - dev
+      - develop
 
 jobs:
   build-and-deploy:
