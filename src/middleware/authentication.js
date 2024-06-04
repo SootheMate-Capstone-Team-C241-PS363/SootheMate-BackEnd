@@ -43,13 +43,6 @@ function authenticate(req, res, next) {
     });
   }
 
-  if (isTokenBlacklisted(token)) {
-    return res.status(401).json({
-      status: 'fail',
-      message: 'Token has been revoked',
-      data: {}
-    });
-  }
 
   jwt.verify(token, secret, (err, user) => {
     if (err) {
@@ -62,5 +55,13 @@ function authenticate(req, res, next) {
     req.user = user;
     next();
   });
+
+  if (isTokenBlacklisted(token)) {
+    return res.status(401).json({
+      status: 'fail',
+      message: 'Token has been revoked',
+      data: {}
+    });
+  }
 }
 module.exports = authenticate;
