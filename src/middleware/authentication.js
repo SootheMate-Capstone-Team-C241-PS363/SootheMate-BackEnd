@@ -2,6 +2,13 @@ const jwt = require('jsonwebtoken');
 const { secret } = require('../config/jwtConfig');
 const { isTokenBlacklisted } = require('./blacklistToken');
 
+/**
+ * Authenticate user based on the provided JWT token.
+ *
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ */
 function authenticate(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];

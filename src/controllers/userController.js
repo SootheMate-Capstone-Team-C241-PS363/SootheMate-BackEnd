@@ -4,6 +4,18 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const firestore = new Firestore();
 
+/**
+ * Get User Detail Handler
+ *
+ * Fetches the details of the authenticated user.
+ *
+ * @async
+ * @function getUserDetailHandler
+ * @param {Object} req - Express request object
+ * @param {Object} req.user - The authenticated user
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>}
+ */
 async function getUserDetailHandler(req, res) {
   try {
     const user = req.user;
@@ -36,6 +48,19 @@ async function getUserDetailHandler(req, res) {
   }
 }
 
+/**
+ * Update Avatar Handler
+ *
+ * Updates the avatar of the authenticated user.
+ *
+ * @async
+ * @function updateAvatarHandler
+ * @param {Object} req - Express request object
+ * @param {Object} req.user - The authenticated user
+ * @param {Object} req.file - The uploaded avatar file
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>}
+ */
 async function updateAvatarHandler(req, res) {
   try {
     const user = req.user;
@@ -72,6 +97,22 @@ async function updateAvatarHandler(req, res) {
   }
 }
 
+/**
+ * Update Profile Handler
+ *
+ * Updates the profile of the authenticated user.
+ *
+ * @async
+ * @function updateProfileHandler
+ * @param {Object} req - Express request object
+ * @param {Object} req.user - The authenticated user
+ * @param {Object} req.body - The profile data to update
+ * @param {string} req.body.name - The new name of the user
+ * @param {string} req.body.gender - The new gender of the user
+ * @param {string} req.body.birth_date - The new birth date of the user
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>}
+ */
 async function updateProfileHandler(req, res) {
   try {
     const user = req.user;

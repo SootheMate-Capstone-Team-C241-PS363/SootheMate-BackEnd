@@ -1,3 +1,11 @@
+/**
+ * Error handler to handle errors occurring in the application.
+ *
+ * @param {Object} err - Error object
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ */
 function errorHandler(err, req, res, next) {
     console.error(err.stack);
     
