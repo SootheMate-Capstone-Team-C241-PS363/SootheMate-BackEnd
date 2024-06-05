@@ -17,6 +17,8 @@
 | `/user/detail` | GET | - | Get user detail | &#9745; |
 | `/user/avatar` | POST | `multipart/form-data` with `avatar` field | Update user avatar | &#9745; |
 | `/user/update` | PUT | `{ "name": "string", "gender": "string", "birth_date": "string" }` | Update user profile | &#9745; |
+| `/auth/logout` | POST | - | Logout user | &#9745; |
+| `/auth/update-password` | PUT | `{ "old_password": "string", "password": "string", "password_confirmation": "string" }` | Update user password | &#9745; |
 
 ## Protected Endpoints ( ML Predictions )
 ` Coming Soon `
