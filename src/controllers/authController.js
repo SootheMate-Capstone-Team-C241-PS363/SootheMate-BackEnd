@@ -1,9 +1,23 @@
+/**
+ * Authentication Controller
+ *
+ * @module controllers/authController
+ */
 const { registerUser, loginUser } = require('../services/authService');
 const bcrypt = require('bcrypt');
 const { Firestore } = require('@google-cloud/firestore');
 const { addTokenToBlacklist } = require('../middleware/blacklistToken');
 const firestore = new Firestore();
 
+/**
+ * Handler for user registration.
+ *
+ * @async
+ * @function registerHandler
+ * @memberof module:controllers/authController
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 async function registerHandler(req, res) {
   try {
     const { name, email, password, password_confirmation } = req.body;
@@ -18,6 +32,15 @@ async function registerHandler(req, res) {
   }
 }
 
+/**
+ * Handler for user login.
+ *
+ * @async
+ * @function loginHandler
+ * @memberof module:controllers/authController
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 async function loginHandler(req, res) {
   try {
     const { email, password } = req.body;
@@ -28,6 +51,15 @@ async function loginHandler(req, res) {
   }
 }
 
+/**
+ * Handler for updating user password.
+ *
+ * @async
+ * @function updatePasswordHandler
+ * @memberof module:controllers/authController
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 async function updatePasswordHandler(req, res) {
   try {
     const { old_password, password, password_confirmation } = req.body;
@@ -60,6 +92,15 @@ async function updatePasswordHandler(req, res) {
   }
 }
 
+/**
+ * Handler for user logout.
+ *
+ * @async
+ * @function logoutHandler
+ * @memberof module:controllers/authController
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 async function logoutHandler(req, res) {
   try {
     const token = req.headers['authorization'].split(' ')[1];

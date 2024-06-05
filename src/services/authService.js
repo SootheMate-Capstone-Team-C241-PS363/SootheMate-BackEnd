@@ -6,6 +6,16 @@ const { secret, expiresIn } = require('../config/jwtConfig');
 const db = new Firestore();
 const usersCollection = db.collection('users');
 
+/**
+ * Register a new user.
+ *
+ * @param {Object} userData - User data
+ * @param {string} userData.name - User's name
+ * @param {string} userData.email - User's email
+ * @param {string} userData.password - User's password
+ * @returns {Promise<Object>} - Registered user data with JWT token
+ * @throws {Error} - If email already exists
+ */
 async function registerUser(userData) {
   const { name, email, gender, birth_date, password } = userData;
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,6 +52,15 @@ async function registerUser(userData) {
   };
 }
 
+/**
+ * Log in a user.
+ *
+ * @param {Object} credentials - User credentials
+ * @param {string} credentials.email - User's email
+ * @param {string} credentials.password - User's password
+ * @returns {Promise<Object>} - Logged in user data with JWT token
+ * @throws {Error} - If user not found or password is incorrect
+ */
 async function loginUser({ email, password }) {
   const userDoc = await usersCollection.doc(email).get();
   if (!userDoc.exists) {

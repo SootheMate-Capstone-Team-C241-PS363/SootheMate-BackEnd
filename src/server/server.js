@@ -1,7 +1,19 @@
+/**
+ * Server initialization script.
+ *
+ * @module server/server
+ */
 require('dotenv').config();
 const app = require('../app.js');
 // const loadModel = require('./services/loadModel');
 
+/**
+ * Immediately-invoked function expression (IIFE) to start the server.
+ *
+ * @async
+ * @function
+ * @memberof module:server/server
+ */
 (async () => {
   try {
     // const model = await loadModel();
