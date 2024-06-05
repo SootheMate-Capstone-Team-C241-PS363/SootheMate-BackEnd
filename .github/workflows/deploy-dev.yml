@@ -16,13 +16,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup Node.js and yarn
+      - name: Setup Node.js 
         uses: actions/setup-node@v2
         with:
           node-version: '18'
 
       - name: Install dependencies
         run: npm install
+
+      # - name: Set JWT_SECRET environment variable
+      #   run: node generate-vars.js "${{ secrets.ENV}}"
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo "${{ secrets.ENV }}" > .env
+          cat .env
 
       - name: Google Cloud Auth
         uses: 'google-github-actions/auth@v2'
