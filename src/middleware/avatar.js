@@ -1,3 +1,9 @@
+/**
+ * Middleware to handle avatar uploads using multer.
+ *
+ * @module middleware/avatar
+ */
+
 const multer = require('multer');
 
 const storage = multer.memoryStorage();

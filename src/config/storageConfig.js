@@ -1,3 +1,10 @@
+/**
+ * Google Cloud Storage configuration module.
+ *
+ * Sets up the connection to the Google Cloud Storage bucket.
+ *
+ * @module config/storageConfig
+ */
 const { Storage } = require('@google-cloud/storage');
 
 const storage = new Storage();
