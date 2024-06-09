@@ -3,6 +3,7 @@ const bucket = require('../config/storageConfig');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const firestore = new Firestore();
+const ResponseFormatter = require('../utils/responseFormatter');
 
 /**
  * Get User Detail Handler
@@ -23,28 +24,24 @@ async function getUserDetailHandler(req, res) {
     const doc = await userRef.get();
 
     if (!doc.exists) {
-      return res.status(404).json({ status: 'fail', message: 'User not found', data: {} });
+      return ResponseFormatter.fail(res,'User not found', 404 )
     }
 
     const userData = doc.data();
-
-    res.status(200).json({
-      status: 'success',
-      message: 'User detail fetched successfully',
-      data: {
-        id: userData.id,
-        name: userData.name,
-        gender: userData.gender,
-        birth_date: userData.birth_date,
-        email: userData.email,
-        email_verified_at: userData.email_verified_at || null,
-        avatar: userData.avatar || null,
-        created_at: userData.created_at,
-        updated_at: userData.updated_at
-      }
+    return ResponseFormatter.success(res, 'User detail fetched successfully', {
+      id: userData.id,
+      name: userData.name,
+      gender: userData.gender,
+      birth_date: userData.birth_date,
+      email: userData.email,
+      email_verified_at: userData.email_verified_at || null,
+      avatar: userData.avatar || null,
+      created_at: userData.created_at,
+      updated_at: userData.updated_at
     });
+    
   } catch (error) {
-    res.status(500).json({ status: 'fail', message: error.message, data: {} });
+    return ResponseFormatter.error(res, error.message);
   }
 }
 
@@ -67,7 +64,7 @@ async function updateAvatarHandler(req, res) {
     const file = req.file;
 
     if (!file) {
-      return res.status(400).json({ status: 'fail', message: 'No file uploaded', data: {} });
+      return ResponseFormatter.fail(res, 'No file uploaded', 400);
     }
 
     const blob = bucket.file(`avatars/${uuidv4()}_${path.basename(file.originalname)}`);
@@ -81,19 +78,19 @@ async function updateAvatarHandler(req, res) {
       const doc = await userRef.get();
 
       if (!doc.exists) {
-        return res.status(404).json({ status: 'fail', message: 'User not found', data: {} });
+        return ResponseFormatter.fail(res, 'User not found', 404);
       }
 
       await userRef.update({ avatar: publicUrl, updated_at: new Date().toISOString() });
 
       const updatedUser = (await userRef.get()).data();
 
-      res.status(200).json({ status: 'success', message: 'Avatar updated successfully', data: updatedUser });
+      return ResponseFormatter.success(res, 'Avatar updated successfully', updatedUser);
     });
 
     blobStream.end(file.buffer);
   } catch (error) {
-    res.status(500).json({ status: 'fail', message: error.message, data: {} });
+    return ResponseFormatter.error(res, error.message);
   }
 }
 
@@ -122,7 +119,7 @@ async function updateProfileHandler(req, res) {
     const doc = await userRef.get();
 
     if (!doc.exists) {
-      return res.status(404).json({ status: 'fail', message: 'User not found', data: {} });
+      return ResponseFormatter.fail(res, 'User not found', 404);
     }
 
     await userRef.update({
@@ -134,9 +131,9 @@ async function updateProfileHandler(req, res) {
 
     const updatedUser = (await userRef.get()).data();
 
-    res.status(200).json({ status: 'success', message: 'Profile updated successfully', data: updatedUser });
+    return ResponseFormatter.success(res, 'Profile updated successfully', updatedUser);
   } catch (error) {
-    res.status(500).json({ status: 'fail', message: error.message, data: {} });
+    return ResponseFormatter.error(res, error.message);
   }
 }
 
