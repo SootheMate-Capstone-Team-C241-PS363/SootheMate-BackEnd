@@ -1,5 +1,14 @@
 const tf = require('@tensorflow/tfjs-node');
 
+/**
+ * Load machine learning model from the specified URL.
+ *
+ * @async
+ * @function loadModel
+ * @param {string} modelType - The type of the model to load ('mandatory' or 'allData').
+ * @returns {Promise<tf.GraphModel>} The loaded machine learning model.
+ * @throws {Error} If an invalid model type is provided or if the model fails to load.
+ */
 async function loadModel(modelType) {
   let modelUrl;
   if (modelType === 'mandatory') {

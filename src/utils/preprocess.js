@@ -1,22 +1,34 @@
+/**
+ * Preprocess input data for the mandatory model.
+ *
+ * @function preprocessMandatoryData
+ * @param {Object} inputData - The input data to preprocess.
+ * @returns {number[]} The preprocessed data.
+ */
 function preprocessMandatoryData(inputData) {
     const genderEncoded = inputData.gender.toLowerCase() === 'male' ? 0 : 1;
   
-    // Ubah properti sesuai dengan yang ada dalam body request
     const rawData = [
       genderEncoded,
       inputData.age,
       inputData.sleep_duration,
       inputData.quality_of_sleep,
       inputData.physical_activity_level,
-      inputData.min_working_hours, // Ubah menjadi min_working_hours
-      inputData.max_working_hours, // Ubah menjadi max_working_hours
+      inputData.min_working_hours, 
+      inputData.max_working_hours, 
     ];
   
     console.log("Raw Data:", rawData);
     return rawData;
   }
 
-
+/**
+ * Preprocess input data for the all data model.
+ *
+ * @function preprocessAllData
+ * @param {Object} inputData - The input data to preprocess.
+ * @returns {number[]} The preprocessed data.
+ */
 function preprocessAllData(inputData) {
     const genderEncoded = inputData.gender.toLowerCase() === 'male' ? 0 : 1;
     // Parse blood pressure
