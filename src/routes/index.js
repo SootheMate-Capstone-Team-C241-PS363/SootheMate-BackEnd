@@ -3,12 +3,8 @@ const router = express.Router();
 const authRoutes = require('./authRoutes');
 const userRoutes = require('./userRoutes');
 const stressLevelRoutes = require('./stressRoutes');
-
-/**
- * Main application routes.
- *
- * @module routes/authRoutes
- */
+const responseFormatter = require('../utils/responseFormatter');
+const messages = require('../constants/responseMessages');
 
 /**
  * Use authentication routes.
@@ -22,7 +18,7 @@ router.use('/auth', authRoutes);
  * Use user routes.
  *
  * @name /user
- * @memberof module:routes/authRoutes
+ * @memberof module:routes/userRoutes
  */
 router.use('/user', userRoutes);
 
@@ -39,13 +35,9 @@ router.use('/stress', stressLevelRoutes);
  * Welcome route.
  *
  * @name GET /
- * @function
- * @memberof module:routes/authRoutes
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
  */
 router.get('/', (req, res) => {
-    res.status(200).json({ status: 'success', message: 'Welcome To API SootheMate V 0.0.1'});
+    return responseFormatter.success(res, messages.WELCOME_MESSAGE  )
   })
 
 module.exports = router;

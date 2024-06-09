@@ -5,7 +5,9 @@ const crypto = require('crypto');
 const { Result } = require('express-validator');
 const {storeData, getPredictionByDate} = require('../services/storeData');
 const { create } = require('domain');
-    
+const ResponseFormatter = require('../utils/responseFormatter');
+
+
 async function predictHandler(req, res, next) {
     try {
         const inputData = req.body;
@@ -33,15 +35,9 @@ async function predictHandler(req, res, next) {
         console.log("test 4 ")
         console.log(stressLevel)
         // res.json({ stressLevel });
-        res.status(200).json({
-            status : 'success',
-            message : 'prediction successfully',
-            data  : {
-                stress_level : stressLevel
-            }
-        })
+        return ResponseFormatter.success(res, 'Prediction successful', { stress_level: stressLevel });
     } catch (error) {
-        console.log(error)
+        return ResponseFormatter.error(res, error.message);
     }
 }
 
@@ -68,11 +64,7 @@ async function savePredictHandler(req, res, next) {
             console.log("PASS TEST2")
             await storeData(existingId, updateData);
             console.log("PASS TEST3");
-            return res.status(201).json({
-                status : 'success',
-                message : 'Prediction saved successfully',
-                data : updateData,
-            });
+            return ResponseFormatter.created(res, 'Prediction saved successfully', updateData);
         } else {
             const id = crypto.randomUUID();
             const created_at = new  Date().toISOString();
@@ -87,11 +79,7 @@ async function savePredictHandler(req, res, next) {
 
             await storeData(id, data);
             console.log("PASS TEST02")
-            return res.status(201).json({
-                status : 'success',
-                message : 'Prediction saved successfully',
-                data,
-            });
+            return ResponseFormatter.created(res, 'Prediction saved successfully', data);
             
         }
     } catch (error) {

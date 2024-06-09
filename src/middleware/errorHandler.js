@@ -1,22 +1,18 @@
+const ResponseFormatter = require('../utils/responseFormatter');
+const messages = require('../constants/responseMessages');
+
 /**
- * Error handler to handle errors occurring in the application.
+ * Error handling middleware for the application.
  *
- * @param {Object} err - Error object
+ * @param {Object} err - The error object
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
  */
 function errorHandler(err, req, res, next) {
-    console.error(err.stack);
-    
-    const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
-    res.status(statusCode).json({
-      status: 'error',
-      message: err.message,
-      stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
-      data: {}
-    });
-  }
-  
-  module.exports = errorHandler;
-  
+  const statusCode = err.statusCode || 500;
+  const message = err.message || messages.INTERNAL_SERVER_ERROR;
+  ResponseFormatter.fail(res, message, statusCode);
+}
+
+module.exports = errorHandler;

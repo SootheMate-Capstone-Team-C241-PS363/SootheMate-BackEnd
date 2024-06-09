@@ -1,4 +1,6 @@
 const { validationResult } = require('express-validator');
+const ResponseFormatter = require('./responseFormatter');
+const messages = require('../constants/responseMessages');
 
 /**
  * Validate request inputs based on predefined validation rules.
@@ -7,13 +9,11 @@ const { validationResult } = require('express-validator');
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
  */
-
 function validateRequest(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const errorMessage = errors.array().reduce((acc, error) => `${acc ? '\n' : ''}${error.msg}`, '');
-    return res.status(400).json({ status : 'fail', message: errorMessage, data : {}})
-
+    const errorMessage = errors.array().map(error => error.msg).join('\n');
+    return ResponseFormatter.fail(res, errorMessage, 400);
   }
   next();
 }

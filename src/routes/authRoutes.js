@@ -4,7 +4,7 @@ const { registerHandler, loginHandler, logoutHandler, updatePasswordHandler } = 
 const validateRequest = require('../utils/validateRequest');
 const authenticate = require('../middleware/authentication');
 const router = express.Router();
-
+const { registerValidator, loginValidator, updatePasswordValidator } = require('../validators/authValidators');
 /**
  * Route to register a new user.
  *
@@ -12,17 +12,8 @@ const router = express.Router();
  * @function
  * @memberof module:routes/authRoutes
  */
-router.post('/register', [
-  body('name').exists().withMessage('Name is required'),
-  body('email').isEmail().withMessage('Email is invalid'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-  body('password_confirmation').custom((value, { req }) => {
-    if (value !== req.body.password) {
-      throw new Error('Password confirmation does not match password');
-    }
-    return true;
-  })
-], validateRequest, registerHandler);
+router.post('/register', registerValidator, validateRequest, registerHandler);
+
 
 /**
  * Route to log in a user.
@@ -31,10 +22,7 @@ router.post('/register', [
  * @function
  * @memberof module:routes/authRoutes
  */
-router.post('/login', [
-  body('email').isEmail().withMessage('Email is invalid'),
-  body('password').exists().withMessage('Password is required')
-], validateRequest, loginHandler);
+router.post('/login', loginValidator, validateRequest, loginHandler);
 
 /**
  * Route for user logout.
@@ -56,15 +44,7 @@ router.post('/logout', authenticate, logoutHandler);
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-router.put('/update-password', authenticate, [
-  body('old_password').exists().withMessage('Old password is required'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-  body('password_confirmation').exists().withMessage('Password confirmation is required').custom((value, { req }) => {
-    if (value !== req.body.password) {
-      throw new Error('Password confirmation does not match password');
-    }
-    return true;
-  })
-], validateRequest, updatePasswordHandler);
+router.put('/update-password', authenticate, updatePasswordValidator, validateRequest, updatePasswordHandler);
+
 
 module.exports = router;

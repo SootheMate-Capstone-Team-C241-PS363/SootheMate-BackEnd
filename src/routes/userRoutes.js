@@ -2,6 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const { getUserDetailHandler, updateAvatarHandler, updateProfileHandler } = require('../controllers/userController');
 const validateRequest = require('../utils/validateRequest');
+const { updateUserValidator } = require('../validators/userValidators');
 const authenticate = require('../middleware/authentication');
 const avatar = require('../middleware/avatar');
 const router = express.Router();
@@ -37,11 +38,7 @@ router.post('/avatar', authenticate, avatar.single('avatar'), updateAvatarHandle
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-router.put('/update', authenticate, [
-  body('name').notEmpty().withMessage('Name is required'),
-  body('gender').notEmpty().withMessage('Gender is required'),
-  body('birth_date').isDate().withMessage('Birth date must be a valid date')
-], validateRequest, updateProfileHandler);
+router.put('/update', authenticate, updateUserValidator, validateRequest, updateProfileHandler);
 
 
 module.exports = router;
