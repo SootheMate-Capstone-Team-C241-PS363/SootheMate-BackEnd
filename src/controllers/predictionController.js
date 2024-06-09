@@ -7,12 +7,19 @@ const {storeData, getPredictionByDate} = require('../services/storeData');
 const { create } = require('domain');
 const ResponseFormatter = require('../utils/responseFormatter');
 
-
+/**
+ * Handle HTTP request for predicting stress level.
+ *
+ * @async
+ * @function predictHandler
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise<void>}
+ */
 async function predictHandler(req, res, next) {
     try {
         const inputData = req.body;
-        console.log("test : "+inputData)
-        // Validasi data input
         const requiredFields = ['gender', 'age', 'sleep_duration', 'quality_of_sleep', 'physical_activity_level', 'min_working_hours', 'max_working_hours'];
         const optionalFields = [ 'blood_pressure', 'heart_rate', 'daily_steps','bmi_category'];
     
@@ -21,8 +28,6 @@ async function predictHandler(req, res, next) {
             throw new InputError(`Missing required field: ${field}`);
           }
         }
-        console.log("test2")
-        // Periksa apakah semua field opsional ada jika salah satu dari mereka ada
         const allOptionalFieldsProvided = optionalFields.every(field => inputData[field] !== undefined);
         const noOptionalFieldsProvided = optionalFields.every(field => inputData[field] === undefined);
     
@@ -30,29 +35,31 @@ async function predictHandler(req, res, next) {
           throw new InputError(`All optional fields must be provided together: ${optionalFields.join(', ')}`);
         }
         
-        console.log("test3")
         const stressLevel = await predict(inputData);
-        console.log("test 4 ")
-        console.log(stressLevel)
-        // res.json({ stressLevel });
         return ResponseFormatter.success(res, 'Prediction successful', { stress_level: stressLevel });
     } catch (error) {
         return ResponseFormatter.error(res, error.message);
     }
 }
 
+/**
+ * Handle HTTP request for saving predicted stress level.
+ *
+ * @async
+ * @function savePredictHandler
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise<void>}
+ */
 async function savePredictHandler(req, res, next) {
     try {
         const {stress_level } = req.body;
-        // const id = crypto.randomUUID();
-        // const created_at = new Date().toISOString();
         const email = req.user.email;
-        // const today = new Date.toISOString().split('T')[0];
         const today = new Date().toISOString().split('T')[0];
         const existingPrediction = await getPredictionByDate(email, today)
         console.log(stress_level)
         if (existingPrediction){
-            console.log("PASS TEST1")
             const existingId = existingPrediction.id;
             const updateData = {
                 id : existingId,
@@ -61,14 +68,11 @@ async function savePredictHandler(req, res, next) {
                 update_at : new Date().toISOString(),
                 email,
             };
-            console.log("PASS TEST2")
             await storeData(existingId, updateData);
-            console.log("PASS TEST3");
             return ResponseFormatter.created(res, 'Prediction saved successfully', updateData);
         } else {
             const id = crypto.randomUUID();
             const created_at = new  Date().toISOString();
-            console.log("PASS TEST01")
             const data = {
                 id,
                 result : stress_level,
@@ -78,7 +82,6 @@ async function savePredictHandler(req, res, next) {
             };
 
             await storeData(id, data);
-            console.log("PASS TEST02")
             return ResponseFormatter.created(res, 'Prediction saved successfully', data);
             
         }

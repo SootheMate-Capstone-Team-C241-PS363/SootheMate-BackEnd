@@ -1,10 +1,15 @@
 const tf = require('@tensorflow/tfjs-node');
 const loadModel = require('./loadModel');
 const { preprocessMandatoryData, preprocessAllData } = require('../utils/preprocess');
-
 let model1;
 let model2;
 
+/**
+ * Load machine learning models required for prediction.
+ *
+ * @async
+ * @function loadModels
+ */
 async function loadModels() {
   if (!model1) {
     console.log("Loading mandatory model...");
@@ -18,10 +23,17 @@ async function loadModels() {
   }
 }
 
+/**
+ * Predict stress level based on input data.
+ *
+ * @async
+ * @function predict
+ * @param {Object} inputData - The input data for prediction.
+ * @returns {Promise<number>} The predicted stress level.
+ * @throws {Error} If there is an error during prediction.
+ */
 async function predict(inputData) {
-  console.log("Starting model loading");
   await loadModels();
-  console.log("Models successfully loaded");
 
   let preprocessedData;
   let modelToUse;
