@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authRoutes = require('./authRoutes');
 const userRoutes = require('./userRoutes');
+const stressLevelRoutes = require('./stressLevel');
+
 /**
  * Main application routes.
  *
@@ -23,6 +25,15 @@ router.use('/auth', authRoutes);
  * @memberof module:routes/authRoutes
  */
 router.use('/user', userRoutes);
+
+/**
+ * stress level route.
+ * 
+ * @memberof module:routes/stress
+ * 
+ */
+router.use('/stress', stressLevelRoutes);
+
 
 /**
  * Welcome route.
