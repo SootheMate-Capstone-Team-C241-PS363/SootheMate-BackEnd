@@ -1,12 +1,11 @@
-// todo : make function to predict stress
-// const { predict } = require('../services/inferenceServices');
 const { predict } = require('../services/inferenceServices')
 const InputError = require('../exceptions/InputError');
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 const { Result } = require('express-validator');
-const {storeData} = require('../services/storeData');
-
+const {storeData, getPredictionByDate} = require('../services/storeData');
+const { create } = require('domain');
+    
 async function predictHandler(req, res, next) {
     try {
         const inputData = req.body;
@@ -49,26 +48,52 @@ async function predictHandler(req, res, next) {
 async function savePredictHandler(req, res, next) {
     try {
         const {stress_level } = req.body;
-        const id = crypto.randomUUID();
-        const created_at = new Date().toISOString();
+        // const id = crypto.randomUUID();
+        // const created_at = new Date().toISOString();
         const email = req.user.email;
+        // const today = new Date.toISOString().split('T')[0];
+        const today = new Date().toISOString().split('T')[0];
+        const existingPrediction = await getPredictionByDate(email, today)
+        console.log(stress_level)
+        if (existingPrediction){
+            console.log("PASS TEST1")
+            const existingId = existingPrediction.id;
+            const updateData = {
+                id : existingId,
+                result : stress_level,
+                created_at : existingPrediction.data().created_at,
+                update_at : new Date().toISOString(),
+                email,
+            };
+            console.log("PASS TEST2")
+            await storeData(existingId, updateData);
+            console.log("PASS TEST3");
+            return res.status(201).json({
+                status : 'success',
+                message : 'Prediction saved successfully',
+                data : updateData,
+            });
+        } else {
+            const id = crypto.randomUUID();
+            const created_at = new  Date().toISOString();
+            console.log("PASS TEST01")
+            const data = {
+                id,
+                result : stress_level,
+                created_at,
+                update_at : created_at,
+                email,
+            };
 
-        const data = {
-            id,
-            result : stress_level,
-            created_at,
-            email
+            await storeData(id, data);
+            console.log("PASS TEST02")
+            return res.status(201).json({
+                status : 'success',
+                message : 'Prediction saved successfully',
+                data,
+            });
+            
         }
-        console.log(data)
-        
-        await storeData(id, data);
-
-        console.log("Pass Test !!")
-        res.status(201).json({
-            status : 'success',
-            message : 'prediction saved successfully',
-            data
-        })
     } catch (error) {
         res.status(500).json({
             status : 'fail',

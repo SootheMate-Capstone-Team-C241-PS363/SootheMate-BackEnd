@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authRoutes = require('./authRoutes');
 const userRoutes = require('./userRoutes');
-const stressLevelRoutes = require('./stressLevel');
+const stressLevelRoutes = require('./stressRoutes');
 
 /**
  * Main application routes.
