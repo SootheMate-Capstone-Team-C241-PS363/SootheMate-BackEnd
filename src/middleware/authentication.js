@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { secret } = require('../config/jwtConfig');
 const { isTokenBlacklisted } = require('./blacklistToken');
-
+const ResponseFormatter = require('../utils/responseFormatter');
 /**
  * Authenticate user based on the provided JWT token.
  *
@@ -14,28 +14,16 @@ function authenticate(req, res, next) {
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({
-      status: 'fail',
-      message: 'Unauthorized',
-      data: {}
-    });
+    return ResponseFormatter.fail(res, "Unauthorized", 401);
   }
 
   if (isTokenBlacklisted(token)) {
-    return res.status(401).json({
-      status: 'fail',
-      message: 'Token has been revoked',
-      data: {}
-    });
+    return ResponseFormatter.fail(res, "Token has been revoked", 401);
   }
 
   jwt.verify(token, secret, (err, user) => {
     if (err) {
-      return res.status(403).json({
-        status: 'fail',
-        message: 'Forbidden',
-        data: {}
-      });
+      return ResponseFormatter.fail(res, "Forbidden", 403);
     }
     req.user = user;
     next();

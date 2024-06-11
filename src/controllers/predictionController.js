@@ -86,11 +86,7 @@ async function savePredictHandler(req, res, next) {
             
         }
     } catch (error) {
-        res.status(500).json({
-            status : 'fail',
-            message : error.message,
-            data : {}
-        })
+        return ResponseFormatter.error(res, error.message);
     }
 }
 
