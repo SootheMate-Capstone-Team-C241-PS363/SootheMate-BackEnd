@@ -5,6 +5,7 @@ const userRoutes = require('./userRoutes');
 const stressLevelRoutes = require('./stressRoutes');
 const responseFormatter = require('../utils/responseFormatter');
 const messages = require('../constants/responseMessages');
+const historyRoutes = require('../routes/historyRoutes')
 
 /**
  * Use authentication routes.
@@ -30,6 +31,7 @@ router.use('/user', userRoutes);
  */
 router.use('/stress', stressLevelRoutes);
 
+router.use('/tracking', historyRoutes);
 
 /**
  * Welcome route.
