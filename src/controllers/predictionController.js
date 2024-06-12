@@ -73,24 +73,22 @@ async function savePredictHandler(req, res, next) {
     console.log('loading ... !!!');
     try {
         const inputData = req.body;
-        // const { result } = inputData;
         const email = req.user.email;
-        // const today = new Date().toISOString().split('T')[0];
-        // const today = moment().tz('Asia/Jakarta').format('YYYY-MM-DD')
         const today = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
         const existingPrediction = await getPredictionByDate(email, today);
         console.log(inputData,"Pass test 1 !!");
         const dataToSave = {
             ...inputData,
             email,
-            created_at: existingPrediction ? existingPrediction.data().created_at : today,
-            // update_at: moment().tz('Asia/Jakarta').toISOString()
+            // created_at: existingPrediction ? existingPrediction.data().created_at : today,
             update_at : today
         };
         console.log(dataToSave, "Pass Test 2 !!");
         if (existingPrediction) {
+            dataToSave.created_at = existingPrediction.data().created_at;
             await storeData(existingPrediction.id, dataToSave);
         } else {
+            dataToSave.created_at = today;
             dataToSave.id = crypto.randomUUID();
             await storeData(dataToSave.id, dataToSave);
         }
