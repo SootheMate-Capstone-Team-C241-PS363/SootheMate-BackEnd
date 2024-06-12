@@ -40,13 +40,6 @@ function preprocessAllData(inputData) {
     const bmiCategoryOverweight = inputData.bmi_category.toLowerCase() === 'overweight' ? 1 : 0;
   
     const rawData = [
-      // genderEncoded,
-      // inputData.age,
-      // inputData.sleep_duration,
-      // inputData.quality_of_sleep,
-      // inputData.physical_activity_level,
-      // inputData.min_working_hours,
-      // inputData.max_working_hours,
       inputData.age,
       inputData.sleep_duration,
       inputData.quality_of_sleep,

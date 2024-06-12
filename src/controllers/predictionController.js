@@ -36,7 +36,23 @@ async function predictHandler(req, res, next) {
         }
         
         const stressLevel = await predict(inputData);
-        return ResponseFormatter.success(res, 'Prediction successful', { stress_level: stressLevel });
+        let title, description;
+
+        if (stressLevel <= 30) {
+            title = "Excellent";
+            description = "You are experiencing minimal stress and are managing any potential stressors effectively.";
+        } else if (stressLevel <= 50) {
+            title = "Good";
+            description = "You are handling stress well and maintaining a balanced and healthy mindset.";
+        } else {
+            title = "Bad";
+            description = "You are experiencing significant stress and may need to take steps to manage it.";
+        }
+        
+        return ResponseFormatter.success(res, 'Prediction successful', {             
+            stress_level: stressLevel,
+            title: title,
+            description: description});
     } catch (error) {
         return ResponseFormatter.error(res, error.message);
     }
@@ -53,47 +69,31 @@ async function predictHandler(req, res, next) {
  * @returns {Promise<void>}
  */
 async function savePredictHandler(req, res, next) {
-    console.log('loading ... !!!')
+    console.log('loading ... !!!');
     try {
-        const {stress_level } = req.body;
-        console.log(stress_level); // test 1
+        const inputData = req.body;
+        // const { result } = inputData;
         const email = req.user.email;
         const today = new Date().toISOString().split('T')[0];
-        const existingPrediction = await getPredictionByDate(email, today)
-        console.log(existingPrediction); // test 2
-        console.log(stress_level)
-        if (existingPrediction){
-            const existingId = existingPrediction.id;
-            const updateData = {
-                id : existingId,
-                result : stress_level,
-                created_at : existingPrediction.data().created_at,
-                update_at : new Date().toISOString(),
-                email,
-            };
-            console.log(existingId, " + ", updateData);
-            await storeData(existingId, updateData);
-            return ResponseFormatter.created(res, 'Prediction saved successfully', updateData);
+        const existingPrediction = await getPredictionByDate(email, today);
+        console.log(inputData,"Pass test 1 !!");
+        const dataToSave = {
+            ...inputData,
+            email,
+            created_at: existingPrediction ? existingPrediction.data().created_at : new Date().toISOString(),
+            update_at: new Date().toISOString()
+        };
+        console.log(dataToSave, "Pass Test 2 !!");
+        if (existingPrediction) {
+            await storeData(existingPrediction.id, dataToSave);
         } else {
-            const id = crypto.randomUUID();
-            const created_at = new  Date().toISOString();
-            console.log('pass tesss new predict !!')
-            const data = {
-                id,
-                result : stress_level,
-                created_at,
-                update_at : created_at,
-                email,
-            };
-
-            console.log('pass test', data)
-            await storeData(id, data);
-            console.log('success !!')
-            return ResponseFormatter.created(res, 'Prediction saved successfully', data);
-            
+            dataToSave.id = crypto.randomUUID();
+            await storeData(dataToSave.id, dataToSave);
         }
+        console.log("Pass test 3")
+        return ResponseFormatter.created(res, 'Prediction saved successfully', dataToSave);
     } catch (error) {
-        console.log("masuk catch")
+        console.log("Error:", error);
         return ResponseFormatter.error(res, error.message);
     }
 }
