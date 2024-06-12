@@ -1,35 +1,21 @@
 const { Firestore } = require('@google-cloud/firestore');
 const moment = require('moment-timezone')
 
-async function storeData(id, data) {
-  const db = new Firestore();
+const db = new Firestore();
+const predictCollection = db.collection('predictions');
+const TIME_ZONE = 'Asia/Jakarta';
 
-  const predictCollection = db.collection('predictions');
+async function storeData(id, data) {
+
   return predictCollection.doc(id).set(data, {merge: true});
 }
 
-
 async function getPredictionByDate(email, date){
-  const db = new Firestore();
-  const predictCollection = db.collection('predictions');
-  // const startOfDay = new Date(date);
-  // startOfDay.setHours(0, 0, 0, 0);
-  // const endOfDay = new Date(date);
-  // endOfDay.setHours(23, 59, 59, 999);
-  // const startOfDay = moment(date).tz('Asia/Jakarta', true).startOf('day').toDate();
-  // const endOfDay = moment(date).tz('Asia/Jakarta', true).endOf('day').toDate();
-  // date = new Date();
-  date = moment().tz('Asia/Jakarta');
-  // const startOfDay = date.clone().startOf('day').tz('Asia/Jakarta', true).toDate();
-  // const endOfDay = date.clone().endOf('day').tz('Asia/Jakarta', true).toDate();
-
-  const startOfDay = moment().tz('Asia/Jakarta').format('YYYY-MM-DD 00:00:00');
-  const endOfDay =  moment().tz('Asia/Jakarta').format('YYYY-MM-DD 23:59:60')
-  console.log(startOfDay, "Start")
-  // tanggal = date.getDate();
-  // console.log(tanggal)
-  console.log(endOfDay, "End")
-  // console.log(endOfDay)
+  date = moment().tz(TIME_ZONE);
+  const startOfDay = moment().tz(TIME_ZONE).format('YYYY-MM-DD 00:00:00');
+  const endOfDay =  moment().tz(TIME_ZONE).format('YYYY-MM-DD 23:59:60')
+  console.log(startOfDay, "Start");
+  console.log(endOfDay, "End");
   const snapshot = await predictCollection
     .where('email', '==', email)
     .where('created_at', '>=', startOfDay)
