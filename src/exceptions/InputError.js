@@ -17,14 +17,5 @@ class InputError extends ClientError {
   }
 }
 
-// module.exports = InputError;
-// class InputError extends Error {
-//   constructor(message) {
-//     super(message);
-//     this.name = 'InputError';
-//     this.status = 400;
-//   }
-// }
-
 module.exports = InputError;
 

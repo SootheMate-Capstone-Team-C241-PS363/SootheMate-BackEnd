@@ -18,10 +18,10 @@ async function getPredictionByDate(email, date){
     .get()
 
   if (snapshot.empty){
-    return nulll
+    return null
   }
 
-    return snapshot.docs[0];
+  return snapshot.docs[0];
 
 }
 module.exports = {storeData, getPredictionByDate};
