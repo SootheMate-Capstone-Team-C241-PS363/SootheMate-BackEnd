@@ -53,11 +53,14 @@ async function predictHandler(req, res, next) {
  * @returns {Promise<void>}
  */
 async function savePredictHandler(req, res, next) {
+    console.log('loading ... !!!')
     try {
         const {stress_level } = req.body;
+        console.log(stress_level); // test 1
         const email = req.user.email;
         const today = new Date().toISOString().split('T')[0];
         const existingPrediction = await getPredictionByDate(email, today)
+        console.log(existingPrediction); // test 2
         console.log(stress_level)
         if (existingPrediction){
             const existingId = existingPrediction.id;
@@ -68,11 +71,13 @@ async function savePredictHandler(req, res, next) {
                 update_at : new Date().toISOString(),
                 email,
             };
+            console.log(existingId, " + ", updateData);
             await storeData(existingId, updateData);
             return ResponseFormatter.created(res, 'Prediction saved successfully', updateData);
         } else {
             const id = crypto.randomUUID();
             const created_at = new  Date().toISOString();
+            console.log('pass tesss new predict !!')
             const data = {
                 id,
                 result : stress_level,
@@ -81,11 +86,14 @@ async function savePredictHandler(req, res, next) {
                 email,
             };
 
+            console.log('pass test', data)
             await storeData(id, data);
+            console.log('success !!')
             return ResponseFormatter.created(res, 'Prediction saved successfully', data);
             
         }
     } catch (error) {
+        console.log("masuk catch")
         return ResponseFormatter.error(res, error.message);
     }
 }

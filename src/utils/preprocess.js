@@ -9,13 +9,13 @@ function preprocessMandatoryData(inputData) {
     const genderEncoded = inputData.gender.toLowerCase() === 'male' ? 0 : 1;
   
     const rawData = [
-      genderEncoded,
       inputData.age,
       inputData.sleep_duration,
       inputData.quality_of_sleep,
-      inputData.physical_activity_level,
+      inputData.physical_activity_level,    
       inputData.min_working_hours, 
       inputData.max_working_hours, 
+      genderEncoded,
     ];
   
     console.log("Raw Data:", rawData);
@@ -40,22 +40,29 @@ function preprocessAllData(inputData) {
     const bmiCategoryOverweight = inputData.bmi_category.toLowerCase() === 'overweight' ? 1 : 0;
   
     const rawData = [
-      genderEncoded,
+      // genderEncoded,
+      // inputData.age,
+      // inputData.sleep_duration,
+      // inputData.quality_of_sleep,
+      // inputData.physical_activity_level,
+      // inputData.min_working_hours,
+      // inputData.max_working_hours,
       inputData.age,
       inputData.sleep_duration,
       inputData.quality_of_sleep,
-      inputData.physical_activity_level,
+      inputData.physical_activity_level,    
       inputData.heart_rate,
-      inputData.min_working_hours,
-      inputData.max_working_hours,
       inputData.daily_steps,
+      inputData.min_working_hours, 
+      inputData.max_working_hours, 
       systolicPressure,
       diastolicPressure,
+      genderEncoded,
       bmiCategoryNormalWeight,
       bmiCategoryObese,
       bmiCategoryOverweight,
     ];
-  
+    console.log(rawData)
     return rawData;
   }
   
