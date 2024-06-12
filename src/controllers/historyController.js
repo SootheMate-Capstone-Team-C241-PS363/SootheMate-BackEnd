@@ -1,20 +1,14 @@
 const { getHistory } = require('../services/getHistory');
+const ResponseFormatter = require('../utils/responseFormatter');
 
 async function getHistoryHandler(req, res) {
   try {
     const email = req.user.email;
     const { filter } = req.query;
     const histories = await getHistory(email, filter);
-    res.status(200).json({
-      status: 'success',
-      data: histories
-    });
+    return ResponseFormatter.success(res, 'History Predictions Successfully Loaded !!', histories);
   } catch (error) {
-    res.status(500).json({
-      status: 'fail',
-      message: error.message,
-      data: {}
-    });
+    return ResponseFormatter.error(res, error.message)
   }
 }
 
