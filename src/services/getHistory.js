@@ -4,6 +4,26 @@ const moment = require('moment-timezone');
 
 const firestore = new Firestore();
 
+
+/**
+ * Get detailed history prediction by ID.
+ *
+ * @async
+ * @function getHistoryById
+ * @param {string} id - The ID of the history prediction.
+ * @returns {Promise<Object>} The detailed history prediction.
+ */
+async function getHistoryById(id) {
+  const historyRef = firestore.collection('predictions').doc(id);
+  const doc = await historyRef.get();
+
+  if (!doc.exists) {
+      throw new Error('History prediction not found');
+  }
+
+  return doc.data();
+}
+
 /**
  * Get history of predictions for a user based on filter.
  *
@@ -44,4 +64,4 @@ function applyFilter(histories, filter) {
   }
 }
 
-module.exports = { getHistory };
+module.exports = { getHistory, getHistoryById };
