@@ -18,3 +18,4 @@ class InputError extends ClientError {
 }
 
 module.exports = InputError;
+
