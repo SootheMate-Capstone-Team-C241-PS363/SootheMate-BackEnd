@@ -31,6 +31,12 @@ router.use('/user', userRoutes);
  */
 router.use('/stress', stressLevelRoutes);
 
+/**
+ * tracking stress level route.
+ * 
+ * @memberof module:routes/tracking
+ * 
+ */
 router.use('/tracking', historyRoutes);
 
 /**

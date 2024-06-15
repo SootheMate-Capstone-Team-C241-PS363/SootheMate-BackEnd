@@ -3,6 +3,12 @@
 ## API URL 🔗
 [SootheMate API](https://soothemate-capstone.et.r.appspot.com/)
 
+### Root Endpoint
+
+| Endpoint | Method | Input | Description | JWT Token |
+| --- | --- | --- | --- | --- |
+| `/` | GET | - | Accessing our root endpoint | &#9744; |
+
 ### Public Endpoints
 
 | Endpoint | Method | Input | Description | JWT Token |
