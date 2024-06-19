@@ -30,7 +30,14 @@
 | Endpoint | Method | Input | Description | JWT Token |
 | --- | --- | --- | --- | --- |
 | `/stress/predict` | POST | `{"gender": "female","age": 19,"sleep_duration": 5,"quality_of_sleep": 5,"physical_activity_level": 20,"min_working_hours": 8,"max_working_hours" : 10}`| Predict Stress Level User | &#9745; |
-| `/stress/save` | POST | `{"stress_level" : 50 }` | Save Stress Level User | &#9745; |
+| `/stress/save` | POST | `{"gender": "male","age": 30,"sleep_duration": 7, "quality_of_sleep": 8,"physical_activity_level": 5,"min_working_hours": 8,"max_working_hours": 10, "result": {"stress_level": 30, "title": "Excellent", "description": "You are experiencing minimal stress and are managing any potential stressors effectively."} }` | Save Stress Level User | &#9745; |
+
+## Protected Endpoints ( History Predictions )
+| Endpoint | Method | Input | Description | JWT Token |
+| --- | --- | --- | --- | --- |
+| `/tracking/history` | GET | - | Get history predict | &#9745; |
+| `/tracking/history?filter={{filter}}` | GET | - | Get history predict by filter | &#9745; |
+| `/tracking/history/{{Id}}` | GET | - | Get detail history input predict | &#9745; |
 
 ## How to Install Node Package Manager (npm)
 
